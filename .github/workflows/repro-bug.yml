@@ -1,0 +1,57 @@
+name: Reproduce appleframeworks iOS sysroot bug
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  reproduce-bug:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ninja
+        run: |
+          brew install ninja
+
+      - name: Install meson 1.10.0
+        run: |
+          pip install meson==1.10.0
+
+      - name: Run meson setup with iOS cross-file
+        run: |
+          meson setup build --cross-file ios.cross
+        continue-on-error: true
+
+      - name: Show build.ninja to demonstrate the bug
+        run: |
+          echo "=== Inspecting build.ninja for incorrect macOS framework paths ==="
+          if [ -f build/build.ninja ]; then
+            echo ""
+            echo "Framework-related flags in build.ninja:"
+            grep -E "FRAMEWORK|MacOSX" build/build.ninja || echo "No MacOSX framework paths found"
+            echo ""
+            echo "Full build.ninja content:"
+            cat build/build.ninja
+          else
+            echo "build.ninja not found - setup may have failed"
+          fi
+
+      - name: Attempt to build (will likely fail or show incorrect framework linkage)
+        run: |
+          if [ -d build ]; then
+            ninja -C build
+          fi
+        continue-on-error: true
+
+      - name: Upload build artifacts for inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            build/
+            !build/.gitignore

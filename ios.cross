@@ -1,0 +1,15 @@
+[binaries]
+c = ['xcrun', '--sdk', 'iphoneos', 'clang']
+objc = ['xcrun', '--sdk', 'iphoneos', 'clang']
+
+[built-in options]
+c_args     = ['-isysroot', '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk', '-arch', 'arm64']
+objc_args  = ['-isysroot', '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk', '-arch', 'arm64']
+c_link_args    = ['-isysroot', '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk', '-arch', 'arm64']
+objc_link_args = ['-isysroot', '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk', '-arch', 'arm64']
+
+[host_machine]
+system = 'darwin'
+cpu_family = 'aarch64'
+cpu = 'aarch64'
+endian = 'little'
